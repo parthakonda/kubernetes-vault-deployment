@@ -1,0 +1,34 @@
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: config
+  labels:
+    app: config
+    type: local
+  annotations:
+    "helm.sh/resource-policy": keep
+spec:
+  storageClassName: default-storageclass
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: "/var/data"
+
+---
+
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: config-claim
+  labels:
+    app: config
+spec:
+  storageClassName: default-storageclass
+  capacity:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
