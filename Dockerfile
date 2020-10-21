@@ -1,7 +1,7 @@
 FROM alpine:3.10
 
 # This is the release of Vault to pull in.
-ARG VAULT_VERSION=1.5.4
+ARG VAULT_VERSION=1.4.7
 
 # Create a vault user and group first so the IDs get set the same way,
 # even as the rest of this may change over time.
@@ -10,7 +10,7 @@ RUN addgroup vault && \
 
 # Set up certificates, our base tools, and Vault.
 RUN set -eux; \
-    apk add --no-cache ca-certificates gnupg openssl libcap su-exec dumb-init tzdata busybox-suid && \
+    apk add --no-cache ca-certificates gnupg openssl libcap su-exec dumb-init tzdata && \
     apkArch="$(apk --print-arch)"; \
     case "$apkArch" in \
         armhf) ARCH='arm' ;; \
@@ -73,7 +73,7 @@ EXPOSE 8200
 # For production derivatives of this container, you shoud add the IPC_LOCK
 # capability so that Vault can mlock memory.
 COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
-COPY cronscript.sh /usr/local/bin/unseal.sh
+COPY unseal.sh /usr/local/bin/unseal.sh
 RUN chmod 777 /usr/local/bin/docker-entrypoint.sh
 RUN chmod 777 /usr/local/bin/unseal.sh
 ENTRYPOINT ["docker-entrypoint.sh"]
